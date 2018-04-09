@@ -1,6 +1,6 @@
 # webglTest
 
- **webglTest**是阅读《H5和WebGL3D开发实战详解》 吴亚峰 于复兴 索伊娜编著 随书源码的例子后，自学用。 [源码地址](http://www.toppr.net/)
+ **webglTest**是阅读《H5和WebGL3D开发实战详解》 吴亚峰 于复兴 索伊娜编著 随书源码的例子后，自学用。 [书籍源码下载地址](http://www.toppr.net/)
 
 ## 章节说明
 部分例子说明如下
