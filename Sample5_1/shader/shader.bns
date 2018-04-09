@@ -1,0 +1,32 @@
+uniform mat4 uMVPMatrix;    //总变换矩阵
+attribute vec3 aPosition;   //顶点位置
+varying vec3 vPosition;     //用于传递给片元着色器的顶点位置
+void main(){
+    //根据总变换矩阵计算此次绘制顶点位置
+    gl_Position = uMVPMatrix * vec4(aPosition,1);
+    vPosition = aPosition;  //将原始顶点位置传递给片元着色器
+}
+<#BREAK_BN#>
+
+precision mediump float;
+uniform float uR;
+varying vec2 mcLongLat; //接收从顶点着色器过来的参数
+varying vec3 vPosition; //接收从顶点着色器过来的顶点位置
+void main(){
+    vec3 color;
+    float n = 8.0;  //一个坐标分量的总份数
+    float span = 2.0*uR/n;  //每一份的长度
+    //每一维在立方体内的行列数
+    int i = int((vPosition.x + uR)/span);
+    int j = int((vPosition.y + uR)/span);
+    int k = int((vPosition.z + uR)/span);
+    //计算当点应位于白色块还是黑色块中
+    int whichColor = int(mod(float(i+j+k),2.0));
+    if(whichColor == 1){//奇数时为红色
+        color = vec3(0.678,0.231,0.129);//红色
+    }else{//偶数时为白色
+        color = vec3(1.0,1.0,1.0);//白色
+    }
+    //将计算出的颜色给此片元
+    gl_FragColor = vec4(color,1.0);
+}
