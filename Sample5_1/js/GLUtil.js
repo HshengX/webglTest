@@ -7,7 +7,7 @@ function initWebGLCanvas(canvasName){
     {
         try
         {
-            context = canvas.getContext(name[ii], null);//获取GL上下文
+            context = canvas.getContext(names[ii], null);//获取GL上下文
         }
         catch(e){}
         if(context)//若成功获取GL上下文则终止循环
@@ -25,7 +25,7 @@ function loadSingleShader(ctx, shaderScript) {
     else if(shaderScript.type == "fragment")//若为片元着色器
         var shaderType = ctx.FRAGMENT_SHADER;//片元着色器类型
     else{//否则打印错误信息
-        log("*** Error: shader script of undefined type'"+shaderScript.type+"'");
+        // log("*** Error: shader script of undefined type'"+shaderScript.type+"'");
         return null;
     }
 
@@ -42,7 +42,7 @@ function loadSingleShader(ctx, shaderScript) {
     var compiled = ctx.getShaderParameter(shader, ctx.COMPILE_STATUS);
     if(!compiled && !ctx.isContextLost()){//若编译出错
         var error = ctx.getShaderInfoLog(shader);//获取错误信息
-        log("*** Error compiling shader '"+shader.id+"':"+error);//打印错误信息
+        Console.log("*** Error compiling shader '"+shader.id+"':"+error);//打印错误信息
         ctx.deleteShader(shader);//删除着色器程序
         return null;//返回空
     }
@@ -67,12 +67,12 @@ function loadShaderSerial(gl, vshader, fshader) {
     gl.linkProgram(program);
 
     //检查链接是否成功
-    var linked = gl.getProgramInfoLog(program, gl.LINK_STATUS);
+    var linked = gl.getProgramParameter(program, gl.LINK_STATUS);
     if(!linked && !gl.isContextLost())//若链接不成功
     {
         //获取并在控制台打印错误信息
         var error = gl.getProgramInfoLog(program);//获取错误信息
-        log("Error in program linking:"+error);//打印错误信息
+        console.log("Error in program linking:"+error);//打印错误信息
 
         gl.deleteProgram(program);//删除着色器程序
         gl.deleteProgram(fragmentShader);//删除片元着色器

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>ProjectOrth Demo</title>
     <script type="text/javascript" src="js/Matrix.js"></script>
     <script type="text/javascript" src="js/MatrixState.js"></script>
@@ -18,7 +18,7 @@
         //着色器程序列表，几种管理
         var shaderProgArray = new Array();
         //绕y轴旋转角度
-        var currenYAngle = 0;
+        var currentYAngle = 0;
         //绕x轴旋转角度
         var currentXAngle = 0;
         //旋转角度步长值
@@ -31,7 +31,7 @@
             var x = event.clientX;
             var y = event.clientY;
             //如果鼠标在canvas内开始移动
-            if(event.target.tagName="CANVAS"){
+            if(event.target.tagName=="CANVAS"){
                 ismoved=true;
                 lastClickX=x;
                 lastClickY=y;
@@ -48,7 +48,7 @@
             var x=event.clientX,y=event.clientY;
             if(ismoved){
                 currentXAngle=currentXAngle+(x-lastClickX)*incAngle;
-                currentXAngle=currenYAngle+(y-lastClickY)*incAngle;
+                currentYAngle=currentYAngle+(y-lastClickY)*incAngle;
             }
             lastClickX=x;
             lastClickY=y;
@@ -76,7 +76,7 @@
                     var X = Number(touch.pageX);
                     var Y = Number(touch.pageY);
                     currentXAngle=currentXAngle+(X-lastClickX)*incAngle;
-                    currentXAngle=currenYAngle+(Y-lastClickY)*incAngle;
+                    currentYAngle=currentYAngle+(Y-lastClickY)*incAngle;
                 }
                 lastClickX=X;
                 lastClickY=Y;
@@ -123,7 +123,7 @@
             //执行平移
             ms.translate(0,0,0);
             //执行绕y轴旋转
-            ms.rotate(currenYAngle,0,1,0);
+            ms.rotate(currentYAngle,0,1,0);
             //执行绕x轴旋转
             ms.rotate(currentXAngle,1,0,0);
             //绘制物体
