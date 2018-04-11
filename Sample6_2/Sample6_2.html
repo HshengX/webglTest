@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>ProjectOrth Demo</title>
+    <script type="text/javascript" src="js/util/Matrix.js"></script>
+    <script type="text/javascript" src="js/util/MatrixState.js"></script>
+    <script type="text/javascript" src="js/util/GLUtil.js"></script>
+    <script type="text/javascript" src="js/Triangle.js"></script>
+    <script type="text/javascript" src="js/util/LoadShaderUtil.js"></script>
+    <script type="text/javascript" src="js/Onclick.js"></script>
+    <script>
+        //GLES上下文
+        var gl;
+        //变换矩阵管理对象
+        var ms = new MatrixState();
+        //声明三角形对象
+        var tr;
+        //着色器程序列表，几种管理
+        var shaderProgArray = new Array();
+        var texMap= new Array();
+        //绕y轴旋转角度
+        var currentYAngle = 0;
+        //绕x轴旋转角度
+        var currentXAngle = 0;
+        //旋转角度步长值
+        var incAngle = 0.5;
+        //上次触控点X,Y坐标
+        var lastClickX=0,lastClickY=0;
+        var ismoved=false;//是否移动标志位
+        var trIndex;//纹理尺寸
+        var currText;//纹理拉伸方式
+        var textId;//GL_CLAMP_TO_EDGE模式下
+        var textIdD;//GL_REPEAT模式下
+        var textsize=new Array(3);//纹理矩形数组
+        //鼠标按下的监听
+        document.onmousedown=function (event) {
+            var x = event.clientX;
+            var y = event.clientY;
+            //如果鼠标在canvas内开始移动
+            if(event.target.tagName=="CANVAS"){
+                ismoved=true;
+                lastClickX=x;
+                lastClickY=y;
+            }
+        };
+
+        //鼠标起始的监听
+        document.onmouseup=function (event) {
+            ismoved=false;
+        }
+
+        //鼠标移动时的监听
+        document.onmousemove=function (event) {
+            var x=event.clientX,y=event.clientY;
+            if(ismoved){
+                currentXAngle=currentXAngle+(x-lastClickX)*incAngle;
+                currentYAngle=currentYAngle+(y-lastClickY)*incAngle;
+            }
+            lastClickX=x;
+            lastClickY=y;
+        };
+
+        //初始化的方法
+        function start() {
+            //获取GL上下文
+            gl=initWebGLCanvas("bncanvas");
+            if(!gl){//若获取gl上下文失败
+                alert("创建GLES上下文失败！");//显示错误提示信息
+                return;
+            }
+            //获取3D canvas
+            var canvas=document.getElementById("bncanvas");
+            canvas.addEventListener("touchstart",function (event) {
+                event.preventDefault();//阻止浏览器默认事件，重要
+                ismoved=true;
+            });
+
+            canvas.addEventListener("touchmove",function (event) {
+                event.preventDefault();//阻止浏览器默认事件，重要
+                if(ismoved){
+                    var touch=event.touches[0];//获取第一个触点
+                    var X = Number(touch.pageX);
+                    var Y = Number(touch.pageY);
+                    currentXAngle=currentXAngle+(X-lastClickX)*incAngle;
+                    currentYAngle=currentYAngle+(Y-lastClickY)*incAngle;
+                }
+                lastClickX=X;
+                lastClickY=Y;
+            });
+
+            canvas.addEventListener("touchend",function (event) {
+                event.preventDefault();//阻止浏览器默认事件，重要
+            });
+
+            //设置视口
+            gl.viewport(0, 0, canvas.width, canvas.height);
+            //设置屏幕背景色RGBA
+            gl.clearColor(0.0, 0.0, 0.0, 1.0);
+            //初始化变换矩阵
+            ms.setInitStack();
+            //设置相机
+            ms.setCamera(0,0,-2,0,0,0,0,1,0);
+            //设置投影参数
+            ms.setProjectOrtho(-1.5,1.5,-1,1,1,100);
+            gl.enable(gl.DEPTH_TEST);//开启深度检测
+
+            //加载着色器程序
+            loadShaderFile("shader/shader.bns",0);//带光照的物体
+            if(shaderProgArray[0])//如果着色器程序已加载完毕
+            {
+                textload();//创建三角形绘制对象
+            }else{
+                setTimeout(function () {
+                    textload();//创建三角形绘制对象
+                },60);//休息10ms后再执行
+            }
+            function textload(){
+                textsize[0]=new Triangle(gl,shaderProgArray[0],1,1);
+                textsize[1]=new Triangle(gl,shaderProgArray[0],4,2);
+                textsize[2]=new Triangle(gl,shaderProgArray[0],4,4);
+                trIndex=0;//默认尺寸为1*1
+            }
+            textId=loadImageTexture(gl,"pic/robot.png",false);//截取拉伸纹理ID
+            textIdD=loadImageTexture(gl,"pic/robot.png",true);//重复拉伸纹理ID
+            currText=textId;//设置当前为截取拉伸纹理
+            setInterval("drawFrame();",20);
+        }
+
+        function drawFrame() {
+            if(!textsize[trIndex]){
+                alert("加载未完成");//提示信息
+                return;
+            }
+            //清除着色缓冲与深度缓冲
+            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+            //保护现场
+            ms.pushMatrix();
+            ms.scale(0.3,0.3,0.3);
+            //绘制物体
+            textsize[trIndex].drawSelf(ms,currText);
+            //恢复现场
+            ms.popMatrix();
+
+        }
+    </script>
+</head>
+<body onload="start();">
+    拉伸方式：
+    <input type="radio" name="stretching" value="EDGE" onclick="getRadio2();" checked="checked">EDGE
+    <input type="radio" name="stretching" value="EDGE" onclick="getRadio2();">REPEAT
+    <br></br>
+    纹理坐标尺寸：
+    <input type="radio" name="size" value="1X1" onclick="getRadio1();" checked="checked">1X1
+    <input type="radio" name="size" value="4X2" onclick="getRadio1();">4X2
+    <input type="radio" name="size" value="4X4" onclick="getRadio1();">4X4
+    <br></br>
+    <canvas height="800" width="1200" id="bncanvas">
+        浏览器不支持WebGL!
+    </canvas></br>
+</body>
+</html>
