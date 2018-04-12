@@ -33,9 +33,9 @@ function SetOfNormal() {
                 if(this.array[index][j].compareNormal(normal)==false){
                     flag=false;
                 }
-                if(flag=true){
-                    this.array[index].push(normal);
-                }
+            }
+            if(flag==true){
+                this.array[index].push(normal);
             }
         }
     }
