@@ -34,7 +34,7 @@ function SetOfNormal() {
                     flag=false;
                 }
             }
-            if(flag==true){
+            if(flag=true){
                 this.array[index].push(normal);
             }
         }
@@ -131,7 +131,7 @@ function fromObjStrToObjectData(objStr) {
 
     //对索引数组进行遍历，将对应法向量放入alnResult数组中
     for(var i=0;i<alFaceIndex.length;i++){
-        alnResult.push(aln[avernormal[i]*3],aln[avernormal[i]*3+1],aln[avernormal[i]*3+2]);
+        alnResult.push(aln[alFaceIndex[i]*3],aln[alFaceIndex[i]*3+1],aln[alFaceIndex[i]*3+2]);
     }
     return new ObjectData(alvResult.length/3,alvResult,alnResult);//返回提取的数据
 }
