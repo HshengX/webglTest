@@ -114,7 +114,7 @@ function Momnet(
         gl.bindTexture(gl.TEXTURE_2D, texture1);//绑定岩石纹理
         //设置纹理
         gl.uniform1i(gl.getUniformLocation(this.program, "sTexture"), 0);//将纹理送入渲染管线
-        gl.uniform1i(gl.getUniformLocation(this.program, "sTextureRock"), 0);//将岩石纹理送入渲染管线
+        gl.uniform1i(gl.getUniformLocation(this.program, "sTextureRock"), 1);//将岩石纹理送入渲染管线
 
         gl.uniform1f(gl.getUniformLocation(this.program,"landStartY"),0);//传送过程纹理的起始y坐标
         gl.uniform1f(gl.getUniformLocation(this.program,"landYSpan"),20);//传送过程纹理跨度
