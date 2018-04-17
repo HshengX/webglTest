@@ -113,6 +113,8 @@ $$
 ## Sample11_4
 初识THREE.js 透视投影和正交投影
 
-
 ## Sample11_5
 初识THREE.js 点光源和环境光
+
+## Sample11_7
+初识THREE.js 聚光灯光源
