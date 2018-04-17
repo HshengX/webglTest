@@ -106,3 +106,6 @@ $$
 
 ## Sample11_2
 初识THREE.js 场景 雾化
+
+## Sample11_3
+初识THREE.js 几何对象
