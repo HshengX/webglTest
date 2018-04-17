@@ -109,3 +109,6 @@ $$
 
 ## Sample11_3
 初识THREE.js 几何对象
+
+## Sample11_4
+初识THREE.js 透视投影和正交投影

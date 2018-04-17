@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="util/three.js"></script>
+    <script type="text/javascript" src="util/dat.GUI.js"></script>
+    <title>Three example</title>
+    <style>
+        body{margin: 0;overflow: hidden}
+    </style>
+</head>
+<body>
+<div id="WebGL-output"></div>
+<script type="text/javascript">
+    window.onload=init;
+    function init() {
+        var scene=new THREE.Scene();//新建场景
+        //新建摄像机位置
+        var camera=new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,0.1,1000);
+        var renderer=new THREE.WebGLRenderer();//新建渲染器
+        renderer.setClearColor(new THREE.Color(0x000000));//设置背景颜色
+        renderer.setSize(window.innerWidth,window.innerHeight);//设置渲染窗口大小
+        var planeGeometry=new THREE.PlaneGeometry(60,60);//新建正方形平面
+        var planeMaterial = new THREE.MeshBasicMaterial({color: 0xcccccc});//创建基本材质
+        var plane=new THREE.Mesh(planeGeometry,planeMaterial);//新建网格对象
+        plane.rotation.x=-0.5*Math.PI;//设置平面旋转角度
+        plane.position.x=-10;//设置长方形平面的位置
+        plane.position.y=-5;
+        plane.position.z=-2;
+        scene.add(plane);//将球体添加到场景中
+        scene.fog=new THREE.Fog(0xffffff,1,100);//开启雾化效果
+        camera.position.x=50;//设置相机位置
+        camera.position.y=20;
+        camera.position.z=50;
+        camera.lookAt(scene.position);//设置相机焦点
+        function addBox(length,translateX,translateY,translateZ) {
+            //添加正方体
+            var boxlength=1.5;
+            //新建正方体几何对象
+            var boxGeometry=new THREE.BoxGeometry(boxlength,boxlength,boxlength);
+            var material=new THREE.MeshNormalMaterial();//创建法向量材质
+            var rolTotal=Math.floor(length/2/boxlength);
+            for(var i=0;i<rolTotal;i++){
+                for(var j=0;j<rolTotal;j++){
+                    var mesh=new THREE.Mesh(boxGeometry,material);
+                    //确定正方体网格的位置
+                    mesh.position.x=-length/2+boxlength/2+2*i*boxlength+translateX;
+                    mesh.position.y=boxlength/2+translateY;
+                    mesh.position.z=-length/2+boxlength/2+2*j*boxlength+translateZ;
+                    scene.add(mesh);
+                }
+            }
+        }
+
+        var controls=new function () {
+            //摄像机按钮相关
+            this.currentCamera="透视投影摄像机";
+
+            this.changeCamera=function () {
+                if(camera instanceof THREE.PerspectiveCamera){//如果当前为透视投影摄像机
+                    //新建正交投影摄像机
+                    camera=new THREE.OrthographicCamera(window.innerWidth/-16,window.innerWidth/16,window.innerHeight/16,window.innerHeight/-16,-200,500);
+                    camera.position.x=50;//设置摄像机位置的x坐标
+                    camera.position.y=20;//设置摄像机位置的y坐标
+                    camera.position.z=50;//设置摄像机位置的z坐标
+                    camera.lookAt(scene.position);
+                    this.currentCamera="正交投影摄像机";//将显示的类型改为正交投影摄像机
+                }else{//如果当前为正交投影摄像机
+                    //新建透视投影摄像机
+                    camera=new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,0.1,1000);
+                    camera.position.x=50;
+                    camera.position.y=20;
+                    camera.position.z=50;
+                    camera.lookAt(scene.position);
+                    this.currentCamera="透视投影摄像机";
+                }
+            };
+        };
+        var gui=new dat.GUI();
+        gui.add(controls,"changeCamera","切换摄像机");
+        gui.add(controls,"currentCamera","当前摄像机类型").listen();
+        //获取当前摄像机类型
+        addBox(60,plane.position.x,plane.position.y,plane.position.z);
+        //将渲染结果添加到网页的元素中
+        document.getElementById("WebGL-output").appendChild(renderer.domElement);
+        renderScene();//绘制方法
+        function renderScene() {
+/*            scene.traverse(function (e) {
+                //如果对象为网个体且不是长方形平面
+                if(e instanceof THREE.Mesh && e!=plane){
+                    e.rotation.x+=0.02;//不断改变正方体的旋转角度
+                    e.rotation.y+=0.02;
+                    e.rotation.z+=0.02;
+                }
+            });*/
+            requestAnimationFrame(renderScene);//请求绘制下一帧
+            renderer.render(scene,camera);//绘制当前画面
+        }
+
+    }
+</script>
+</body>
+</html>
