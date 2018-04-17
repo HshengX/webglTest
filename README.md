@@ -103,3 +103,6 @@ $$
 
 ## Sample11_1
 初识THREE.js
+
+## Sample11_2
+初识THREE.js 场景 雾化
