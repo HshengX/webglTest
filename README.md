@@ -117,4 +117,7 @@ $$
 初识THREE.js 点光源和环境光
 
 ## Sample11_7
-初识THREE.js 聚光灯光源
+初识THREE.js 聚光灯光源 重点是开启投影
+
+## Sample11_8
+在**Sample11_7**的基础上修改。初识THREE.js 平行光光源 重点是开启投影
