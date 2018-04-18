@@ -144,3 +144,6 @@ $$
 
 ## Sample11_15
 初识THREE.js 材质-着色器材质。
+
+## Sample11_16
+初识THREE.js 模型加载-three.js支持的模型文件格式。以JSON文件格式保存和加载几何体
