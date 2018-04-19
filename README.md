@@ -168,3 +168,6 @@ $$
 
 ## Sample11_23
 在**Sample11_22**的基础上修改。初识THREE.js 加载JSON格式模型，使用骨骼和蒙皮来制作动画。程序实现动画
+
+## Sample11_24
+在**Sample11_22**的基础上修改。初识THREE.js 加载JSON格式模型，使用骨骼和蒙皮来制作动画。blender创建骨骼动画导出到JSON

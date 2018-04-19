@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>使用骨骼和蒙皮制作动画</title>
+    <script type="text/javascript" src="libs/three.js"></script>
+    <script type="text/javascript" src="libs/stats.js"></script>
+    <script type="text/javascript" src="libs/tween.min.js"></script>
+    <script type="text/javascript" src="libs/dat.gui.js"></script>
+    <style>
+        body{
+            margin:0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<div id="Stats-output"></div>
+<div id="WebGL-output"></div>
+
+<script type="text/javascript">
+    function init() {
+        var stats=initStats();
+
+        var scene=new THREE.Scene();
+        var camera=new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,0.1,1000);
+        var webGLRenderer=new THREE.WebGLRenderer();
+        webGLRenderer.setClearColor(new THREE.Color(0xEEEEEE,1.0));
+        webGLRenderer.setSize(window.innerWidth,window.innerHeight);
+        webGLRenderer.shadowMapEnabled=true;
+
+        camera.position.x=0;
+        camera.position.y=0;
+        camera.position.z=4;
+        camera.lookAt(new THREE.Vector3(-20,0,0));
+
+        var spotLight = new THREE.DirectionalLight(0xffffff);
+        spotLight.position.set(0, 50, 30);
+        spotLight.intensity = 1;
+        scene.add(spotLight);
+
+        document.getElementById("WebGL-output").appendChild(webGLRenderer.domElement);
+
+        var mesh;
+        var helper;
+        var clock = new THREE.Clock();
+
+        var controls = new function () {
+            this.showHelper = false;
+        };
+        var gui = new dat.GUI();
+        gui.add(controls, 'showHelper', 0, 0.5).onChange(function (state) {
+            helper.visible = state;
+        });
+
+        render();
+
+        //以JSON文件格式加载模型
+        var loader = new THREE.JSONLoader();
+        loader.load("assets/models/hand-2.js",function (geometry, mat) {
+            var mat = new THREE.MeshLambertMaterial({color:0xF0C8C9,skinning:true});
+            mesh=new THREE.SkinnedMesh(geometry,mat);
+
+            //创建动画对象
+            var animation=new THREE.Animation(mesh,geometry.animation);
+
+            mesh.rotation.x=0.5*Math.PI;
+            mesh.rotation.z=0.7*Math.PI;
+
+            mesh.scale.x=6;
+            mesh.scale.y=6;
+            mesh.scale.z=6;
+
+            mesh.position.x=-20;
+            mesh.position.y=0;
+            mesh.position.z=0;
+
+            scene.add(mesh);
+            helper=new THREE.SkeletonHelper(mesh);//创建可视骨骼对象
+            helper.material.linewidth=2;//设置线宽
+            helper.visible=false;//默认不可见骨骼
+            scene.add(helper);//向场景中添加骨骼
+            animation.play();
+
+        },"assets/models");
+
+        function render() {
+            stats.update();
+            var delta=clock.getDelta();//得到定时位置数据
+
+            if (mesh) {
+                // mesh.rotation.x += 0.006;
+                helper.update();//更新骨骼数据
+                THREE.AnimationHandler.update(delta);//更新动画
+            }
+            requestAnimationFrame(render);
+            webGLRenderer.render(scene,camera);
+        }
+
+        function initStats() {
+            var stats=new Stats();
+            stats.setMode(0);//0:fps,1:ms
+
+            stats.domElement.style.position="absolute";
+            stats.domElement.style.left="0px";
+            stats.domElement.style.top="0px";
+
+            document.getElementById("Stats-output").appendChild(stats.domElement);
+            return stats;
+        }
+    }
+    window.onload=init;
+</script>
+</body>
+</html>
