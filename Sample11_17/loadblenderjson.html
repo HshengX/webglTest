@@ -106,6 +106,7 @@
             return mesh;
         }*/
 
+        //以JSON文件格式加载模型
         var loader = new THREE.JSONLoader();
         loader.load("assets/models/misc_chair01.js",function (geometry,mat) {
             loadedMesh=new THREE.Mesh(geometry,mat[0]);
