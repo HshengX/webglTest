@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>使用骨骼和蒙皮制作动画</title>
+    <script type="text/javascript" src="libs/three.js"></script>
+    <script type="text/javascript" src="libs/stats.js"></script>
+    <script type="text/javascript" src="libs/tween.min.js"></script>
+    <style>
+        body{
+            margin:0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<div id="Stats-output"></div>
+<div id="WebGL-output"></div>
+
+<script type="text/javascript">
+    function init() {
+        var stats=initStats();
+
+        var scene=new THREE.Scene();
+        var camera=new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,0.1,1000);
+        var webGLRenderer=new THREE.WebGLRenderer();
+        webGLRenderer.setClearColor(new THREE.Color(0xEEEEEE,1.0));
+        webGLRenderer.setSize(window.innerWidth,window.innerHeight);
+        webGLRenderer.shadowMapEnabled=true;
+
+        camera.position.x=0;
+        camera.position.y=0;
+        camera.position.z=4;
+        camera.lookAt(new THREE.Vector3(-20,0,0));
+
+        var spotLight = new THREE.DirectionalLight(0xffffff);
+        spotLight.position.set(0, 50, 30);
+        spotLight.intensity = 1;
+        scene.add(spotLight);
+
+        document.getElementById("WebGL-output").appendChild(webGLRenderer.domElement);
+
+        var mesh;
+
+        render();
+
+        //以JSON文件格式加载模型
+        var loader = new THREE.JSONLoader();
+        loader.load("assets/models/hand-1.js",function (geometry, mat) {
+            var mat = new THREE.MeshLambertMaterial({color:0xF0C8C9,skinning:true});
+            mesh=new THREE.SkinnedMesh(geometry,mat);
+
+            mesh.rotation.x=0.5*Math.PI;
+            mesh.rotation.z=0.7*Math.PI;
+
+            mesh.scale.x=6;
+            mesh.scale.y=6;
+            mesh.scale.z=6;
+
+            mesh.position.x=-20;
+            mesh.position.y=0;
+            mesh.position.z=0;
+
+            scene.add(mesh);
+
+            tween.start();
+        },"assets/models");
+
+        var onUpdate=function () {
+            var pos=this.pos;
+            console.log(mesh.skeleton);
+
+            mesh.skeleton.bones[5].rotation.set(0, 0, pos);
+            mesh.skeleton.bones[5].rotation.set(0, 0, pos);
+            mesh.skeleton.bones[6].rotation.set(0, 0, pos);
+            mesh.skeleton.bones[10].rotation.set(0, 0, pos);
+            mesh.skeleton.bones[11].rotation.set(0, 0, pos);
+            mesh.skeleton.bones[15].rotation.set(0, 0, pos);
+            mesh.skeleton.bones[16].rotation.set(0, 0, pos);
+            mesh.skeleton.bones[20].rotation.set(0, 0, pos);
+            mesh.skeleton.bones[21].rotation.set(0, 0, pos);
+
+            // rotate the wrist
+            mesh.skeleton.bones[1].rotation.set(pos, 0, 0);
+        }
+
+        var tween=new TWEEN.Tween({pos:-1})
+            .to({pos:0},3000)
+            .easing(TWEEN.Easing.Cubic.InOut)
+            .yoyo(true)
+            .repeat(Infinity)
+            .onUpdate(onUpdate);
+
+        function render() {
+            stats.update();
+            TWEEN.update();
+            if (mesh) {
+                // mesh.rotation.x += 0.006;
+            }
+            requestAnimationFrame(render);
+            webGLRenderer.render(scene,camera);
+        }
+
+        function initStats() {
+            var stats=new Stats();
+            stats.setMode(0);//0:fps,1:ms
+
+            stats.domElement.style.position="absolute";
+            stats.domElement.style.left="0px";
+            stats.domElement.style.top="0px";
+
+            document.getElementById("Stats-output").appendChild(stats.domElement);
+            return stats;
+        }
+    }
+    window.onload=init;
+</script>
+</body>
+</html>
