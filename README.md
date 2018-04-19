@@ -149,7 +149,10 @@ $$
 初识THREE.js 模型加载-three.js支持的模型文件格式。以JSON文件格式保存和加载几何体、以JSON文件格式保存和加载场景
 
 ## Sample11_17
-初识THREE.js 模型加载-three.js支持的模型文件格式。加载JSON格式模型。JSON格式模型文件是blender建模后导出的适合three.js的JSON格式
+初识THREE.js 模型加载-three.js支持的模型文件格式。加载JSON格式模型（可以定义几何体、纹理）。JSON格式模型文件是blender建模后导出的适合three.js的JSON格式
 
 ## Sample11_18
-在**Sample11_17**的基础上修改。初识THREE.js 模型加载-three.js支持的模型文件格式。加载OBJ格式模型，加载OBJ、MTL格式模型。
+在**Sample11_17**的基础上修改。初识THREE.js 模型加载-three.js支持的模型文件格式。加载OBJ格式模型（定义几何体），加载OBJ（定义几何体）、MTL格式模型（定义几纹理）。
+
+## Sample11_19
+在**Sample11_17**的基础上修改。初识THREE.js 模型加载-three.js支持的模型文件格式。加载Collada格式模型（定义几何体、材质甚至可以定义光照）

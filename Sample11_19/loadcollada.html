@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>保存加载几何体</title>
+    <script type="text/javascript" src="libs/three.js"></script>
+    <script type="text/javascript" src="libs/stats.js"></script>
+    <script type="text/javascript" src="libs/ColladaLoader.js"></script>
+    <style>
+        body{
+            margin:0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<div id="Stats-output"></div>
+<div id="WebGL-output"></div>
+
+<script type="text/javascript">
+    function init() {
+        var stats=initStats();
+
+        var scene=new THREE.Scene();
+        var camera=new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,0.1,1000);
+        var webGLRenderer=new THREE.WebGLRenderer();
+        webGLRenderer.setClearColor(new THREE.Color(0x00000,1.0));
+        webGLRenderer.setSize(window.innerWidth,window.innerHeight);
+        webGLRenderer.shadowMapEnabled=true;
+
+        camera.position.x=150;
+        camera.position.y=150;
+        camera.position.z=150;
+        camera.lookAt(new THREE.Vector3(-20,0,0));
+
+        var spotLight = new THREE.DirectionalLight(0xffffff);
+        spotLight.position.set(150, 150, 150);
+        spotLight.intensity = 1;
+        scene.add(spotLight);
+
+        document.getElementById("WebGL-output").appendChild(webGLRenderer.domElement);
+
+        var mesh;
+
+        render();
+
+        //以JSON文件格式加载模型
+        var loader = new THREE.ColladaLoader();
+        loader.load("assets/models/dae/Truck_dae.dae",function (result) {
+            mesh = result.scene.children[0].children[0].clone();//获得模型对象
+
+            mesh.scale.set(4,4,4);
+            mesh.position.x=-20;
+            mesh.position.y=0;
+            mesh.position.z=0;
+
+            scene.add(mesh);
+        });
+
+        function render() {
+            stats.update();
+            if (mesh) {
+                // mesh.rotation.x += 0.006;
+            }
+            requestAnimationFrame(render);
+            webGLRenderer.render(scene,camera);
+        }
+
+        function initStats() {
+            var stats=new Stats();
+            stats.setMode(0);//0:fps,1:ms
+
+            stats.domElement.style.position="absolute";
+            stats.domElement.style.left="0px";
+            stats.domElement.style.top="0px";
+
+            document.getElementById("Stats-output").appendChild(stats.domElement);
+            return stats;
+        }
+    }
+    window.onload=init;
+</script>
+</body>
+</html>
