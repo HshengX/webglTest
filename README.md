@@ -155,4 +155,13 @@ $$
 在**Sample11_17**的基础上修改。初识THREE.js 模型加载-three.js支持的模型文件格式。加载OBJ格式模型（定义几何体），加载OBJ（定义几何体）、MTL格式模型（定义几纹理）。
 
 ## Sample11_19
-在**Sample11_17**的基础上修改。初识THREE.js 模型加载-three.js支持的模型文件格式。加载Collada格式模型（定义几何体、材质甚至可以定义光照）
+在**Sample11_17**的基础上修改。初识THREE.js 模型加载-three.js支持的模型文件格式。加载Collada格式模型（定义几何体、材质甚至可以定义光照、动画）
+
+## Sample11_20
+在**Sample11_17**的基础上修改。初识THREE.js 模型加载-three.js支持的模型文件格式。加载STL格式模型
+
+## Sample11_21
+在**Sample11_17**的基础上修改。初识THREE.js 模型加载-three.js支持的模型文件格式。加载CTM格式模型
+
+## Sample11_22
+在**Sample11_17**的基础上修改。初识THREE.js 模型加载-three.js支持的模型文件格式。加载VTK格式模型
