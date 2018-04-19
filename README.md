@@ -172,6 +172,8 @@ $$
 ## Sample11_24
 在**Sample11_22**的基础上修改。初识THREE.js 加载JSON格式模型，使用骨骼和蒙皮来制作动画。blender创建骨骼动画导出到JSON
 
+## Sample11_25
+在**Sample11_19**的基础上修改。初识THREE.js 加载Collada格式模型,从Collada模型中加载动画
 
-## Sample11_24
-在**Sample11_22**的基础上修改。初识THREE.js 加载Collada格式模型,从Collada模型中加载动画
+## Sample11_26
+初识THREE.js 加载FBX格式模型,从FBX模型中加载动画
