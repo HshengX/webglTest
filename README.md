@@ -152,4 +152,4 @@ $$
 初识THREE.js 模型加载-three.js支持的模型文件格式。加载JSON格式模型。JSON格式模型文件是blender建模后导出的适合three.js的JSON格式
 
 ## Sample11_18
-初识THREE.js 模型加载-three.js支持的模型文件格式。加载OBJ格式模型，加载OBJ、MTL格式模型。
+在**Sample11_17**的基础上修改。初识THREE.js 模型加载-three.js支持的模型文件格式。加载OBJ格式模型，加载OBJ、MTL格式模型。

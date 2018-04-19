@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>保存加载几何体</title>
+    <script type="text/javascript" src="libs/three.js"></script>
+    <script type="text/javascript" src="libs/stats.js"></script>
+    <script type="text/javascript" src="libs/OBJLoader.js"></script>
+    <style>
+        body{
+            margin:0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<div id="Stats-output"></div>
+<div id="WebGL-output"></div>
+
+<script type="text/javascript">
+    function init() {
+        var stats=initStats();
+
+        var scene=new THREE.Scene();
+        var camera=new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,0.1,1000);
+        var webGLRenderer=new THREE.WebGLRenderer();
+        webGLRenderer.setClearColor(new THREE.Color(0xEEEEEE,1.0));
+        webGLRenderer.setSize(window.innerWidth,window.innerHeight);
+        webGLRenderer.shadowMapEnabled=true;
+
+        camera.position.x=-30;
+        camera.position.y=40;
+        camera.position.z=50;
+        camera.lookAt(new THREE.Vector3(-20,0,0));
+
+        var spotLight = new THREE.DirectionalLight(0xffffff);
+        spotLight.position.set(30, 40, 50);
+        spotLight.intensity = 1;
+        scene.add(spotLight);
+
+        document.getElementById("WebGL-output").appendChild(webGLRenderer.domElement);
+
+        var mesh;
+
+        render();
+
+        //以JSON文件格式加载模型
+        var loader = new THREE.OBJLoader();
+        loader.load("assets/models/pinecone.obj",function (loadedMesh) {
+            var material=new THREE.MeshLambertMaterial({color:0x5C3A21});
+            //循环遍历每一个mesh为其设置材质
+            loadedMesh.children.forEach(function (child) {
+                child.material=material;
+                child.geometry.computeFaceNormals();//计算面法向量
+                child.geometry.computeVertexNormals();//计算点法向量
+            });
+
+            mesh = loadedMesh;
+
+            loadedMesh.scale.set(100,100,100);
+
+            loadedMesh.position.x=-20;
+            loadedMesh.position.y=0;
+            loadedMesh.position.z=0;
+            loadedMesh.rotation.x=-0.3;
+            scene.add(loadedMesh);
+        });
+
+        function render() {
+            stats.update();
+            if (mesh) {
+                mesh.rotation.y += 0.006;
+                mesh.rotation.x += 0.006;
+            }
+            requestAnimationFrame(render);
+            webGLRenderer.render(scene,camera);
+        }
+
+        function initStats() {
+            var stats=new Stats();
+            stats.setMode(0);//0:fps,1:ms
+
+            stats.domElement.style.position="absolute";
+            stats.domElement.style.left="0px";
+            stats.domElement.style.top="0px";
+
+            document.getElementById("Stats-output").appendChild(stats.domElement);
+            return stats;
+        }
+    }
+    window.onload=init;
+</script>
+</body>
+</html>
