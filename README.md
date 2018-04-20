@@ -177,3 +177,6 @@ $$
 
 ## Sample11_26
 初识THREE.js 加载FBX格式模型,从FBX模型中加载动画
+
+## Sample11_27
+初识THREE.js 使用纹理贴图
