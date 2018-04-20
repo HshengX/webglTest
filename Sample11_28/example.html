@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="util/three.js"></script>
+    <script type="text/javascript" src="util/dat.GUI.js"></script>
+    <script type="text/javascript" src="util/OBJLoader.js"></script>
+    <style>
+        body{
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div id="WebGL-output"></div>
+    <script type="text/javascript">
+        function init() {
+            var scene=new THREE.Scene();//新建场景
+            var camera=new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,0.1,1000);
+            var renderer=new THREE.WebGLRenderer();//新建渲染器
+            renderer.setClearColor(new THREE.Color(0x000000,1.0));//设置背景色
+            renderer.setSize(window.innerWidth,window.innerHeight);//设置窗口大小
+/*            var boxGeometry=new THREE.BoxGeometry(15,15,15);//新建正方体
+            var box=withTextureMesh(boxGeometry,"box.jpg");//创建网格对象
+            scene.add(box);//将正方体添加到场景中*/
+
+            var model;//用来控制模型的变量
+            var loader=new THREE.OBJLoader();//新建obj加载器
+            loader.load("model/konglong.obj",function (loadedMesh) {//加载obj模型
+                var material=getNormalTextureMaterial("konglong.jpg","konglongn.jpg");//新建材质
+                loadedMesh.children.forEach(function (child) {//遍历模型的所有子对象
+                    child.material=material;//将材质应用到模型中
+                });
+                model=loadedMesh;//将读取的模型赋值给model变量
+                loadedMesh.scale.set(1.2,1.2,1.2);//设置放大系数
+                scene.add(loadedMesh);//将模型添加到场景中
+            });
+
+            camera.position.x = 30;
+            camera.position.y = 30;
+            camera.position.z = 30;
+            camera.lookAt(new THREE.Vector3(0, 0, 0));//设置摄像机焦点
+            var light = new THREE.DirectionalLight();
+            light.position.set(20, 20, 20);
+            scene.add(light);
+            document.getElementById("WebGL-output").appendChild(renderer.domElement);
+            var step = 0;
+            render();
+            function render() {
+                if (model) {
+                    model.rotation.y += 0.006;
+                }
+                requestAnimationFrame(render);
+                renderer.render(scene, camera);
+            }
+
+            function getNormalTextureMaterial(imageName,normalName) {//创建带有纹理的网格对象
+                var texture=new THREE.ImageUtils.loadTexture("textures/"+imageName);//读取纹理图的数据
+                var mat=new THREE.MeshPhongMaterial();//新建phong材质
+                mat.map=texture;
+                var normal=THREE.ImageUtils.loadTexture("textures/"+normalName);
+                mat.normalMap=normal;
+                return mat;
+            }
+        }
+        window.onload=init;
+    </script>
+</body>
+</html>
