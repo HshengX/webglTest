@@ -195,3 +195,6 @@ $$
 
 ## Sample11_32
 初识THREE.js 粒子系统
+
+## Sample11_33
+在**Sample11_31**的基础上修改。初识THREE.js 二次绘制-FilmPass通道
