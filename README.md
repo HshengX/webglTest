@@ -201,3 +201,6 @@ $$
 
 ## Sample11_34
 在**Sample11_31**的基础上修改。初识THREE.js 二次绘制-BloomPass通道
+
+## Sample11_35
+在**Sample11_31**的基础上修改。初识THREE.js 二次绘制-DotScreenPass通道
