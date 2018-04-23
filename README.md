@@ -192,3 +192,6 @@ $$
 
 ## Sample11_31
 在**Sample11_27**的基础上修改。初识THREE.js 使用高光贴图
+
+## Sample11_32
+初识THREE.js 粒子系统
